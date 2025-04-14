@@ -42,18 +42,16 @@ if __name__ == "__main__":
     textify = Textify()
     
     print("Welcome to Textify! (Type 'quit' to exit)")
-    print("Format: <text> | <source_language_code> | <target_language_code>")
-    print("Example: Hello, how are you? | en | es")
-    print("Note: Language codes are like 'en' for English, 'es' for Spanish, etc.")
+
     
     while True:
-        user_input = input("\nEnter text to translate: ")
-        if user_input.lower() == 'quit':
+        text = input("\nEnter text to translate: ")
+        source_lang= input("enter source language: ")
+        target_lang= input("enter target language:")
+        if text.lower() == 'quit':
             break
             
         try:
-            text, source_lang, target_lang = [x.strip() for x in user_input.split('|')]
-            
             print("\nBasic Translation:")
             print(textify.translate_text(text, target_lang, source_lang))
             
