@@ -14,46 +14,48 @@ class Textify:
         """
         try:
             translator = GoogleTranslator(source=source_lang, target=target_lang)
-            translated_text = translator.translate(text)
-
-            # Try to enhance with AI
-            try:
-                chat_completion = self.groq_client.chat.completions.create(
-                    messages=[
-                        {
-                            "role": "system",
-                            "content": "You are a professional translator. Improve the given translation while maintaining its original meaning."
-                        },
-                        {
-                            "role": "user",
-                            "content": f"Original: {text}\nTranslation: {translated_text}\nPlease improve this translation if needed."
-                        }
-                    ],
-                    model="llama-3.3-70b-versatile",
-                )
-                return chat_completion.choices[0].message.content
-            except Exception as e:
-                return translated_text  # Return the basic translation if AI enhancement fails
-                
+            return translator.translate(text)
         except Exception as e:
             return f"Translation error: {str(e)}"
+
+        
+        try:
+            chat_completion = self.groq_client.chat.completions.create(
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are a professional translator. Improve the given translation while maintaining its original meaning."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                model="llama-3.3-70b-versatile",
+            )
+            return chat_completion.choices[0].message.content
+        except Exception as e:
+            return translated_text  # Return the basic translation if AI enhancement fails
 
 # Example usage
 if __name__ == "__main__":
     textify = Textify()
     
     print("Welcome to Textify! (Type 'quit' to exit)")
+
     
     while True:
         text = input("\nEnter text to translate: ")
-        source_lang = input("enter source language: ")
-        target_lang = input("enter target language:")
+        source_lang= input("enter source language: ")
+        target_lang= input("enter target language:")
         if text.lower() == 'quit':
             break
             
         try:
-            print("\nTranslation:")
+            print("\nBasic Translation:")
             print(textify.translate_text(text, target_lang, source_lang))
+            
+        
             
         except ValueError:
             print("Please use the correct format: text | source_language | target_language")

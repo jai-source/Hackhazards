@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AudioMac</title>
+    <title>AudioMac - Voice Translator</title>
     <style>
         :root {
             --bg-dark: #121212;
@@ -352,82 +352,50 @@
     </header>
     
     <main>
-        <div class="converter-container">
-            <div class="text-box" id="source-box">
-                <div class="text-box-header">
-                    <select class="language-selector" id="source-language">
-                        <option value="English">English</option>
-                        <option value="Spanish">Spanish</option>
-                        <option value="French">French</option>
-                        <option value="German">German</option>
-                        <option value="Japanese">Japanese</option>
-                    </select>
-                    <div class="action-buttons">
-                        <button class="btn" id="voice-input-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
-                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                <line x1="12" y1="19" x2="12" y2="23"></line>
-                                <line x1="8" y1="23" x2="16" y2="23"></line>
-                            </svg>
-                            Voice
-                        </button>
-                    </div>
-                </div>
-                <textarea class="text-area" id="source-text" placeholder="Text to be translated..."></textarea>
-                <button class="btn btn-primary" id="translate-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                    Translate
-                </button>
-            </div>
+        <div class="container">
+            <h1>Voice Translator</h1>
             
-            <button class="swap-btn" id="swap-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="17 3 21 3 21 7"></polyline>
-                    <polyline points="7 21 3 21 3 17"></polyline>
-                    <line x1="21" y1="3" x2="14" y2="10"></line>
-                    <line x1="3" y1="21" x2="10" y2="14"></line>
-                </svg>
-            </button>
-            
-            <div class="text-box" id="target-box">
-                <div class="text-box-header">
-                    <select class="language-selector" id="target-language">
-                        <option value="Spanish">Spanish</option>
-                        <option value="English">English</option>
-                        <option value="French">French</option>
-                        <option value="German">German</option>
-                        <option value="Japanese">Japanese</option>
-                    </select>
-                    <div class="action-buttons">
-                        <button class="btn" id="copy-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 4.2v10.3"></path>
-                            </svg>
-                            Copy
-                        </button>
-                        <button class="btn" id="voice-output-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
-                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                <line x1="12" y1="19" x2="12" y2="23"></line>
-                                <line x1="8" y1="23" x2="16" y2="23"></line>
-                            </svg>
-                            Speak
-                        </button>
-                    </div>
-                </div>
-                <textarea class="text-area" id="target-text" placeholder="Translation will appear here..." readonly></textarea>
-                <button class="btn" id="history-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    History
-                </button>
+            <div>
+                <select id="source-language">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                    <option value="hi">Hindi</option>
+                    <option value="ja">Japanese</option>
+                </select>
+                
+                <select id="target-language">
+                    <option value="hi">Hindi</option>
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                    <option value="ja">Japanese</option>
+                </select>
             </div>
+
+            <div>
+                <button id="voice-input-btn">🎤 Start Recording</button>
+                <div id="timer"></div>
+            </div>
+
+            <div>
+                <h3>Original Text:</h3>
+                <textarea id="source-text" rows="4" readonly></textarea>
+            </div>
+
+            <div>
+                <h3>Translated Text:</h3>
+                <textarea id="target-text" rows="4" readonly></textarea>
+            </div>
+
+            <div>
+                <h3>Audio Output:</h3>
+                <audio id="audio-output" controls></audio>
+            </div>
+
+            <div class="status" id="status"></div>
         </div>
     </main>
     
@@ -436,295 +404,162 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Set current year in footer
             document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // Initialize elements
+            const voiceInputBtn = document.getElementById("voice-input-btn");
+            const sourceText = document.getElementById("source-text");
+            const targetText = document.getElementById("target-text");
+            const sourceLang = document.getElementById("source-language");
+            const targetLang = document.getElementById("target-language");
+            const audioOutput = document.getElementById("audio-output");
+            const timerDisplay = document.getElementById("timer");
+            const statusDisplay = document.getElementById("status");
             
-            // Elements
-            const sourceText = document.getElementById('source-text');
-            const targetText = document.getElementById('target-text');
-            const translateBtn = document.getElementById('translate-btn');
-            const swapBtn = document.getElementById('swap-btn');
-            const copyBtn = document.getElementById('copy-btn');
-            const voiceInputBtn = document.getElementById('voice-input-btn');
-            const voiceOutputBtn = document.getElementById('voice-output-btn');
-            const sourceLanguage = document.getElementById('source-language');
-            const targetLanguage = document.getElementById('target-language');
-            const sourceBox = document.getElementById('source-box');
-            const targetBox = document.getElementById('target-box');
-            const historyBtn = document.getElementById('history-btn');
-            
-            // Create ripple effect function
-            function createRipple(event) {
-                const button = event.currentTarget;
-                const circle = document.createElement("span");
-                const diameter = Math.max(button.clientWidth, button.clientHeight);
-                const radius = diameter / 2;
-                
-                circle.style.width = circle.style.height = `${diameter}px`;
-                circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
-                circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
-                circle.classList.add("ripple");
-                
-                const ripple = button.getElementsByClassName("ripple")[0];
-                if (ripple) ripple.remove();
-                
-                button.appendChild(circle);
+            let isRecording = false;
+            let recorder = null;
+            let timer = null;
+            let recordingTime = 0;
+
+            // Check browser compatibility first
+            if (!window.navigator?.mediaDevices?.getUserMedia) {
+                voiceInputBtn.disabled = true;
+                statusDisplay.textContent = "Your browser doesn't support audio recording. Please use Chrome, Firefox, or Edge.";
+                return;
             }
-            
-            // Add ripple effect to buttons
-            const buttons = document.querySelectorAll('.btn, .swap-btn');
-            buttons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    createRipple(e);
-                    const ripple = this.querySelector('.ripple');
-                    if (ripple) {
-                        setTimeout(() => {
-                            ripple.remove();
-                        }, 600);
-                    }
-                });
-            });
-            
-            // Translate button click
-            translateBtn.addEventListener('click', function() {
-                if (!sourceText.value.trim()) {
-                    // Shake animation for empty input
-                    sourceBox.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97)';
-                    setTimeout(() => {
-                        sourceBox.style.animation = '';
-                    }, 500);
-                    return;
-                }
-                
-                // Add pulse animation to translate button
-                translateBtn.classList.add('pulse');
-                
-                // Simulate translation loading
-                targetText.value = '';
-                targetText.classList.add('typing-animation');
-                
-                // Loading animation for target box
-                targetBox.style.background = `linear-gradient(
-                    90deg,
-                    var(--bg-darker),
-                    rgba(123, 44, 191, 0.1),
-                    var(--bg-darker)
-                `;
-                targetBox.style.backgroundSize = '200% 100%';
-                targetBox.style.animation = 'loadingShimmer 1.5s infinite linear';
-                
-                // Simulate API call with timeout
-                setTimeout(() => {
-                    const translatedText = simulateTranslation(
-                        sourceText.value, 
-                        sourceLanguage.value, 
-                        targetLanguage.value
-                    );
-                    
-                    // Animate the typing effect
-                    typeText(targetText, translatedText, () => {
-                        targetText.classList.remove('typing-animation');
-                        translateBtn.classList.remove('pulse');
-                        targetBox.style.background = 'var(--bg-darker)';
-                        targetBox.style.animation = '';
-                        
-                        // Success animation
-                        targetBox.style.transform = 'translateY(-5px)';
-                        targetBox.style.boxShadow = '0 8px 20px rgba(123, 44, 191, 0.15)';
-                        setTimeout(() => {
-                            targetBox.style.transform = 'translateY(0)';
-                            targetBox.style.boxShadow = '0 4px 12px rgba(123, 44, 191, 0.1)';
-                        }, 500);
+
+            // Request microphone permission immediately to handle the case where user needs to enable it
+            try {
+                await navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        stream.getTracks().forEach(track => track.stop());
+                        statusDisplay.textContent = "Microphone access granted. Ready to record!";
+                    })
+                    .catch(err => {
+                        throw err;
                     });
-                }, 800);
-            });
-            
-            // Swap languages
-            swapBtn.addEventListener('click', function() {
-                const tempLang = sourceLanguage.value;
-                sourceLanguage.value = targetLanguage.value;
-                targetLanguage.value = tempLang;
-                
-                const tempText = sourceText.value;
-                sourceText.value = targetText.value;
-                targetText.value = tempText;
-                
-                // Animation
-                const isMobile = window.innerWidth <= 768;
-                swapBtn.style.transform = isMobile 
-                    ? 'rotate(630deg) scale(1.2)' 
-                    : 'rotate(540deg) scale(1.2)';
-                
-                // Float animation for text boxes
-                sourceBox.style.transform = 'translateY(-10px)';
-                targetBox.style.transform = 'translateY(-10px)';
-                
-                setTimeout(() => {
-                    swapBtn.style.transform = isMobile 
-                        ? 'rotate(90deg) scale(1)' 
-                        : 'rotate(0) scale(1)';
-                        
-                    sourceBox.style.transform = 'translateY(0)';
-                    targetBox.style.transform = 'translateY(0)';
-                }, 500);
-            });
-            
-            // Copy translation
-            copyBtn.addEventListener('click', function() {
-                if (!targetText.value) {
-                    // Shake animation for empty translation
-                    targetBox.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97)';
-                    setTimeout(() => {
-                        targetBox.style.animation = '';
-                    }, 500);
-                    return;
-                }
-                
-                navigator.clipboard.writeText(targetText.value).then(() => {
-                    // Visual feedback
-                    const originalText = copyBtn.innerHTML;
-                    copyBtn.innerHTML = `
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        Copied!
-                    `;
-                    copyBtn.style.backgroundColor = 'rgba(123, 44, 191, 0.2)';
-                    
-                    setTimeout(() => {
-                        copyBtn.innerHTML = originalText;
-                        copyBtn.style.backgroundColor = '';
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy text: ', err);
-                    const originalText = copyBtn.innerHTML;
-                    copyBtn.textContent = 'Error!';
-                    setTimeout(() => {
-                        copyBtn.innerHTML = originalText;
-                    }, 2000);
-                });
-            });
-            
-            // Voice input simulation
-            voiceInputBtn.addEventListener('click', function() {
-                if (!('webkitSpeechRecognition' in window)) {
-                    // Shake animation for unsupported feature
-                    voiceInputBtn.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97)';
-                    setTimeout(() => {
-                        voiceInputBtn.style.animation = '';
-                    }, 500);
-                    return;
-                }
-                
-                // Animation
-                voiceInputBtn.classList.add('pulse');
-                
-                // Simulate voice recognition
-                setTimeout(() => {
-                    sourceText.value = "This is a simulated voice input result.";
-                    voiceInputBtn.classList.remove('pulse');
-                    
-                    // Animate the source box
-                    sourceBox.style.transform = 'scale(1.02)';
-                    setTimeout(() => {
-                        sourceBox.style.transform = 'scale(1)';
-                    }, 300);
-                }, 1500);
-            });
-            
-            // Voice output simulation
-            voiceOutputBtn.addEventListener('click', function() {
-                if (!targetText.value) {
-                    // Shake animation for empty translation
-                    targetBox.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97)';
-                    setTimeout(() => {
-                        targetBox.style.animation = '';
-                    }, 500);
-                    return;
-                }
-                
-                // Animation
-                voiceOutputBtn.classList.add('pulse');
-                setTimeout(() => {
-                    voiceOutputBtn.classList.remove('pulse');
+            } catch (error) {
+                voiceInputBtn.disabled = true;
+                statusDisplay.textContent = "Please allow microphone access to use voice translation.";
+                console.error("Microphone access error:", error);
+                return;
+            }
+
+            function updateTimer() {
+                const minutes = Math.floor(recordingTime / 60);
+                const seconds = recordingTime % 60;
+                timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            function startTimer() {
+                recordingTime = 0;
+                updateTimer();
+                timer = setInterval(() => {
+                    recordingTime++;
+                    updateTimer();
                 }, 1000);
-                
-                // Simulate voice output with floating animation
-                voiceOutputBtn.style.transform = 'translateY(-3px)';
-                setTimeout(() => {
-                    voiceOutputBtn.style.transform = 'translateY(0)';
-                }, 300);
-            });
-            
-            // History button
-            historyBtn.addEventListener('click', function() {
-                // Bounce animation
-                historyBtn.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    historyBtn.style.transform = 'scale(1)';
-                }, 300);
-                alert('Translation history would appear here');
-            });
-            
-            // Helper function to simulate translation
-            function simulateTranslation(text, fromLang, toLang) {
-                const translations = {
-                    "English": {
-                        "Spanish": "Este es un texto traducido del inglés al español.",
-                        "French": "Ceci est un texte traduit de l'anglais vers le français.",
-                        "German": "Dies ist ein Text, der vom Englischen ins Deutsche übersetzt wurde.",
-                        "Japanese": "これは英語から日本語に翻訳されたテキストです。"
-                    },
-                    "Spanish": {
-                        "English": "This is a text translated from Spanish to English.",
-                        "French": "Ceci est un texte traduit de l'espagnol vers le français.",
-                        "German": "Dies ist ein Text, der vom Spanischen ins Deutsche übersetzt wurde.",
-                        "Japanese": "これはスペイン語から日本語に翻訳されたテキストです。"
-                    },
-                    "French": {
-                        "English": "This is a text translated from French to English.",
-                        "Spanish": "Este es un texto traducido del francés al español.",
-                        "German": "Dies ist ein Text, der vom Französischen ins Deutsche übersetzt wurde.",
-                        "Japanese": "これはフランス語から日本語に翻訳されたテキストです。"
-                    },
-                    "German": {
-                        "English": "This is a text translated from German to English.",
-                        "Spanish": "Este es un texto traducido del alemán al español.",
-                        "French": "Ceci est un texte traduit de l'allemand vers le français.",
-                        "Japanese": "これはドイツ語から日本語に翻訳されたテキストです。"
-                    },
-                    "Japanese": {
-                        "English": "This is a text translated from Japanese to English.",
-                        "Spanish": "Este es un texto traducido del japonés al español.",
-                        "French": "Ceci est un texte traduit du japonais vers le français.",
-                        "German": "Dies ist ein Text, der vom Japanischen ins Deutsche übersetzt wurde."
-                    }
-                };
-                
-                if (translations[fromLang] && translations[fromLang][toLang]) {
-                    return translations[fromLang][toLang];
-                }
-                return "Translation not available for this language pair.";
             }
-            
-            // Typing animation effect
-            function typeText(element, text, callback) {
-                let i = 0;
-                element.value = '';
-                
-                function typing() {
-                    if (i < text.length) {
-                        element.value += text.charAt(i);
-                        i++;
-                        setTimeout(typing, 20 + Math.random() * 30);
-                    } else if (callback) {
-                        callback();
+
+            function stopTimer() {
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+            }
+
+            voiceInputBtn.onclick = async () => {
+                if (isRecording) {
+                    // Stop recording
+                    voiceInputBtn.disabled = true;
+                    voiceInputBtn.textContent = "Processing...";
+                    recorder.stop();
+                    stopTimer();
+                    isRecording = false;
+                } else {
+                    // Start recording
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ 
+                            audio: true,
+                            video: false
+                        });
+                        
+                        recorder = new MediaRecorder(stream, {
+                            mimeType: 'audio/webm;codecs=opus'
+                        });
+                        
+                        let chunks = [];
+
+                        recorder.ondataavailable = (e) => {
+                            if (e.data.size > 0) {
+                                chunks.push(e.data);
+                            }
+                        };
+
+                        recorder.onstop = async () => {
+                            try {
+                                const blob = new Blob(chunks, { type: "audio/webm" });
+                                const formData = new FormData();
+                                formData.append("audio", blob, "voice.webm");
+                                formData.append("source_lang", sourceLang.value);
+                                formData.append("target_lang", targetLang.value);
+
+                                statusDisplay.textContent = "Translating...";
+                                targetText.value = "Translating...";
+
+                                const res = await fetch("http://localhost:5000/translate-audio", {
+                                    method: "POST",
+                                    body: formData
+                                });
+
+                                if (!res.ok) {
+                                    throw new Error(`HTTP error! status: ${res.status}`);
+                                }
+
+                                const data = await res.json();
+                                
+                                if (data.error) {
+                                    throw new Error(data.error);
+                                }
+
+                                sourceText.value = data.recognized_text || "Could not recognize speech.";
+                                targetText.value = data.ai_translation || "Translation failed.";
+
+                                if (data.audio_base64) {
+                                    const audioBlob = new Blob(
+                                        [Uint8Array.from(atob(data.audio_base64), c => c.charCodeAt(0))],
+                                        { type: "audio/mp3" }
+                                    );
+                                    const audioUrl = URL.createObjectURL(audioBlob);
+                                    audioOutput.src = audioUrl;
+                                    audioOutput.play();
+                                    statusDisplay.textContent = "Translation complete!";
+                                }
+                            } catch (error) {
+                                statusDisplay.textContent = `Error: ${error.message}`;
+                                console.error("Translation error:", error);
+                            } finally {
+                                voiceInputBtn.disabled = false;
+                                voiceInputBtn.textContent = "🎤 Start Recording";
+                                stream.getTracks().forEach(track => track.stop());
+                            }
+                        };
+
+                        chunks = [];
+                        recorder.start();
+                        startTimer();
+                        isRecording = true;
+                        voiceInputBtn.textContent = "🎙️ Stop Recording";
+                        statusDisplay.textContent = "Recording... Click again to stop.";
+                    } catch (error) {
+                        statusDisplay.textContent = `Error accessing microphone: ${error.message}`;
+                        console.error("Microphone error:", error);
+                        voiceInputBtn.disabled = false;
+                        voiceInputBtn.textContent = "🎤 Start Recording";
                     }
                 }
-                
-                typing();
-            }
+            };
         });
     </script>
 </body>

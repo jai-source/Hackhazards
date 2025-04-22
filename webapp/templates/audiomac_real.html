@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Textify</title>
+    <title>AudioMac - Voice Translator</title>
     <style>
         :root {
             --bg-dark: #121212;
@@ -56,6 +56,58 @@
             animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
         }
         
+        .container {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        select, button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 4px;
+            border: 1px solid #7b2cbf;
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        button {
+            background-color: #7b2cbf;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #9d4edd;
+        }
+
+        button:disabled {
+            background-color: #4a4a4a;
+            cursor: not-allowed;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            border: 1px solid #7b2cbf;
+        }
+
+        .status {
+            color: #9d4edd;
+            margin: 10px 0;
+        }
+
+        #timer {
+            font-size: 1.2em;
+            color: #9d4edd;
+            margin: 10px 0;
+        }
+
         .converter-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -348,68 +400,54 @@
 </head>
 <body>
     <header>
-        <div class="logo">Textify</div>
+        <div class="logo">AudioMac</div>
     </header>
     
     <main>
-        <div class="converter-container">
-            <div class="text-box" id="source-box">
-                <div class="text-box-header">
-                    <select class="language-selector" id="source-language">
-                        <option value="English">English</option>
-                        <option value="Spanish">Spanish</option>
-                        <option vale="French">Fruench</option>
-                        <option value="German">German</option>
-                        <option value="Japanese">Japanese</option>
-                    </select>
-                    
-                </div>
-                <textarea class="text-area" id="source-text" placeholder="Enter text to translate..."></textarea>
-                <button class="btn btn-primary" id="translate-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                    Translate
-                </button>
-            </div>
+        <div class="container">
+            <h1>Voice Translator</h1>
             
-            <button class="swap-btn" id="swap-btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="17 3 21 3 21 7"></polyline>
-                    <polyline points="7 21 3 21 3 17"></polyline>
-                    <line x1="21" y1="3" x2="14" y2="10"></line>
-                    <line x1="3" y1="21" x2="10" y2="14"></line>
-                </svg>
-            </button>
-            
-            <div class="text-box" id="target-box">
-                <div class="text-box-header">
-                    <select class="language-selector" id="target-language">
-                        <option value="Spanish">Spanish</option>
-                        <option value="English">English</option>
-                        <option value="French">French</option>
-                        <option value="German">German</option>
-                        <option value="Japanese">Japanese</option>
-                    </select>
-                    <div class="action-buttons">
-                        <button class="btn" id="copy-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 8l-5-5-5 5M12 4.2v10.3"></path>
-                            </svg>
-                            Copy
-                        </button>
+            <div>
+                <select id="source-language">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                    <option value="hi">Hindi</option>
+                    <option value="ja">Japanese</option>
+                </select>
                 
-                    </div>
-                </div>
-                <textarea class="text-area" id="target-text" placeholder="Translation will appear here..." readonly></textarea>
-                <button class="btn" id="history-btn">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    History
-                </button>
+                <select id="target-language">
+                    <option value="hi">Hindi</option>
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                    <option value="ja">Japanese</option>
+                </select>
             </div>
+
+            <div>
+                <button id="voice-input-btn">🎤 Start Recording</button>
+                <div id="timer"></div>
+            </div>
+
+            <div>
+                <h3>Original Text:</h3>
+                <textarea id="source-text" rows="4" readonly></textarea>
+            </div>
+
+            <div>
+                <h3>Translated Text:</h3>
+                <textarea id="target-text" rows="4" readonly></textarea>
+            </div>
+
+            <div>
+                <h3>Audio Output:</h3>
+                <audio id="audio-output" controls></audio>
+            </div>
+
+            <div class="status" id="status"></div>
         </div>
     </main>
     
@@ -418,6 +456,117 @@
     </footer>
 
     <script>
+        const voiceInputBtn = document.getElementById("voice-input-btn");
+        const sourceText = document.getElementById("source-text");
+        const targetText = document.getElementById("target-text");
+        const sourceLang = document.getElementById("source-language");
+        const targetLang = document.getElementById("target-language");
+        const audioOutput = document.getElementById("audio-output");
+        const timerDisplay = document.getElementById("timer");
+        const statusDisplay = document.getElementById("status");
+        
+        let isRecording = false;
+        let recorder = null;
+        let timer = null;
+        let recordingTime = 0;
+
+        function updateTimer() {
+            const minutes = Math.floor(recordingTime / 60);
+            const seconds = recordingTime % 60;
+            timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            recordingTime = 0;
+            updateTimer();
+            timer = setInterval(() => {
+                recordingTime++;
+                updateTimer();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        }
+
+        voiceInputBtn.onclick = async () => {
+            if (isRecording) {
+                // Stop recording
+                voiceInputBtn.disabled = true;
+                voiceInputBtn.textContent = "Processing...";
+                recorder.stop();
+                stopTimer();
+                isRecording = false;
+            } else {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    recorder = new MediaRecorder(stream);
+                    let chunks = [];
+
+                    recorder.ondataavailable = (e) => chunks.push(e.data);
+
+                    recorder.onstop = async () => {
+                        const blob = new Blob(chunks, { type: "audio/webm" });
+                        const formData = new FormData();
+                        formData.append("audio", blob, "voice.webm");
+                        formData.append("source_lang", sourceLang.value);
+                        formData.append("target_lang", targetLang.value);
+
+                        statusDisplay.textContent = "Translating...";
+                        targetText.value = "Translating...";
+
+                        try {
+                            const res = await fetch("http://localhost:5000/translate-audio", {
+                                method: "POST",
+                                body: formData
+                            });
+
+                            const data = await res.json();
+                            
+                            if (data.error) {
+                                throw new Error(data.error);
+                            }
+
+                            sourceText.value = data.recognized_text || "Could not recognize speech.";
+                            targetText.value = data.ai_translation || "Translation failed.";
+
+                            if (data.audio_base64) {
+                                const audioBlob = new Blob(
+                                    [Uint8Array.from(atob(data.audio_base64), c => c.charCodeAt(0))],
+                                    { type: "audio/mp3" }
+                                );
+                                const audioUrl = URL.createObjectURL(audioBlob);
+                                audioOutput.src = audioUrl;
+                                audioOutput.play();
+                                statusDisplay.textContent = "Translation complete!";
+                            }
+                        } catch (error) {
+                            statusDisplay.textContent = `Error: ${error.message}`;
+                            console.error("Translation error:", error);
+                        }
+
+                        voiceInputBtn.disabled = false;
+                        voiceInputBtn.textContent = "🎤 Start Recording";
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+
+                    chunks = [];
+                    recorder.start();
+                    startTimer();
+                    isRecording = true;
+                    voiceInputBtn.textContent = "🎙️ Stop Recording";
+                    statusDisplay.textContent = "Recording...";
+                } catch (error) {
+                    statusDisplay.textContent = `Error accessing microphone: ${error.message}`;
+                    console.error("Microphone error:", error);
+                }
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
             // Set current year in footer
             document.getElementById('current-year').textContent = new Date().getFullYear();
@@ -480,10 +629,10 @@
                 }
                 
                 // Add pulse animation to translate button
-                //translateBtn.classList.add('pulse');
+                translateBtn.classList.add('pulse');
                 
                 // Simulate translation loading
-                /*targetText.value = '';
+                targetText.value = '';
                 targetText.classList.add('typing-animation');
                 
                 // Loading animation for target box
@@ -494,18 +643,18 @@
                     var(--bg-darker)
                 `;
                 targetBox.style.backgroundSize = '200% 100%';
-                targetBox.style.animation = 'loadingShimmer 1.5s infinite linear';*/
+                targetBox.style.animation = 'loadingShimmer 1.5s infinite linear';
                 
                 // Simulate API call with timeout
                 setTimeout(() => {
-                    simulateTranslation(
+                    const translatedText = simulateTranslation(
                         sourceText.value, 
                         sourceLanguage.value, 
                         targetLanguage.value
                     );
                     
                     // Animate the typing effect
-                    /*typeText(targetText, translatedText, () => {
+                    typeText(targetText, translatedText, () => {
                         targetText.classList.remove('typing-animation');
                         translateBtn.classList.remove('pulse');
                         targetBox.style.background = 'var(--bg-darker)';
@@ -518,7 +667,7 @@
                             targetBox.style.transform = 'translateY(0)';
                             targetBox.style.boxShadow = '0 4px 12px rgba(123, 44, 191, 0.1)';
                         }, 500);
-                    });*/
+                    });
                 }, 800);
             });
             
@@ -651,43 +800,43 @@
             
             // Helper function to simulate translation
             function simulateTranslation(text, fromLang, toLang) {
-                const baseUrl = window.location.origin;
-                const apiUrl = baseUrl +"/translate";
-                //const apiUrl = 'http://127.0.0.1:5000/translate';
-                const outputElement = document.getElementById('target-text');
-
-                data = {
-                    'text': text,
-                    'srcLang': fromLang,
-                    'destLang': toLang
-                }
-
-                fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
+                const translations = {
+                    "English": {
+                        "Spanish": "Este es un texto traducido del inglés al español.",
+                        "French": "Ceci est un texte traduit de l'anglais vers le français.",
+                        "German": "Dies ist ein Text, der vom Englischen ins Deutsche übersetzt wurde.",
+                        "Japanese": "これは英語から日本語に翻訳されたテキストです。"
                     },
-                    body: JSON.stringify(data)
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        const translatedText = data.translatedText;
-                        outputElement.value = translatedText;
-                        console.log('Data received:', data);
-                        // Handle the data, e.g., update the UI
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        // Handle errors, e.g., display an error message
-                    });
-
+                    "Spanish": {
+                        "English": "This is a text translated from Spanish to English.",
+                        "French": "Ceci est un texte traduit de l'espagnol vers le français.",
+                        "German": "Dies ist ein Text, der vom Spanischen ins Deutsche übersetzt wurde.",
+                        "Japanese": "これはスペイン語から日本語に翻訳されたテキストです。"
+                    },
+                    "French": {
+                        "English": "This is a text translated from French to English.",
+                        "Spanish": "Este es un texto traducido del francés al español.",
+                        "German": "Dies ist ein Text, der vom Französischen ins Deutsche übersetzt wurde.",
+                        "Japanese": "これはフランス語から日本語に翻訳されたテキストです。"
+                    },
+                    "German": {
+                        "English": "This is a text translated from German to English.",
+                        "Spanish": "Este es un texto traducido del alemán al español.",
+                        "French": "Ceci est un texte traduit de l'allemand vers le français.",
+                        "Japanese": "これはドイツ語から日本語に翻訳されたテキストです。"
+                    },
+                    "Japanese": {
+                        "English": "This is a text translated from Japanese to English.",
+                        "Spanish": "Este es un texto traducido del japonés al español.",
+                        "French": "Ceci est un texte traduit du japonais vers le français.",
+                        "German": "Dies ist ein Text, der vom Japanischen ins Deutsche übersetzt wurde."
+                    }
+                };
                 
-                return;
+                if (translations[fromLang] && translations[fromLang][toLang]) {
+                    return translations[fromLang][toLang];
+                }
+                return "Translation not available for this language pair.";
             }
             
             // Typing animation effect
@@ -709,5 +858,7 @@
             }
         });
     </script>
+
+<audio id="audio-output" controls hidden></audio>
 </body>
 </html>
