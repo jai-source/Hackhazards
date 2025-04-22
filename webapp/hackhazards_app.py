@@ -27,26 +27,26 @@ def audioMac():
 
 @app.route("/translate", methods=["POST"])
 def translate():
-    print(request.headers)
-    data = request.get_json()
-    print(data)
-    text = data['text']
-    srcLangCode = getLanguageCode(data['srcLang'])
-    destLangCode = getLanguageCode(data['destLang'])
-    translatedText = Textify.translate_text(Textify, text, destLangCode, srcLangCode)
-    data = {
-        "translatedText": translatedText
-    }
-    return jsonify(data),200
+    try:
+        data = request.get_json()
+        text = data['text']
+        srcLangCode = getLanguageCode(data['srcLang'])
+        destLangCode = getLanguageCode(data['destLang'])
+        translator = Textify()
+        translatedText = translator.translate_text(text, destLangCode, srcLangCode)
+        return jsonify({"translatedText": translatedText}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 def getLanguageCode(language):
-    languageDict  = {
+    languageDict = {
         'English': 'en', 
         'French': 'fr', 
         'German': 'de', 
         'Hindi': 'hi', 
         'Japanese': 'ja',
-        'Spanish': 'es'}
+        'Spanish': 'es'
+    }
     return languageDict[language]
 
 def get_language_code(lang_name):
@@ -111,5 +111,5 @@ def translate_audio():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
