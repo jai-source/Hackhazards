@@ -459,8 +459,9 @@
       formData.append("target_lang", targetLang.value);
 
       targetText.value = "Translating...";
-
-      const res = await fetch("http://localhost:5000/translate-audio", {
+      const baseUrl = window.location.origin;
+      const apiUrl = baseUrl +"/translate-audio";
+      const res = await fetch(apiUrl, {
         method: "POST",
         body: formData
       });
