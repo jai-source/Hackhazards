@@ -253,6 +253,29 @@
             opacity: 0;
             animation: fadeIn 0.8s ease 1.4s forwards;
         }
+
+        .btn-back-home {
+            display: block;
+            margin: 1rem auto;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-back-home:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-back-home:active {
+            transform: translateY(1px);
+        }
         
         .pulse {
             animation: pulse 1.5s infinite !important;
@@ -398,7 +421,7 @@
             </div>
         </div>
     </main>
-    
+    <button class="btn-back-home" onclick="location.href='/'">Back to Home</button>
     <footer>
         <p>Groq Translator &copy; <span id="current-year"></span> | Simple, fast language conversion</p>
     </footer>
@@ -421,6 +444,7 @@
             const sourceBox = document.getElementById('source-box');
             const targetBox = document.getElementById('target-box');
             const historyBtn = document.getElementById('history-btn');
+            const backHomeBtn = document.querySelector('.btn-back-home');
             
             // Create ripple effect function
             function createRipple(event) {
@@ -633,6 +657,11 @@
                     historyBtn.style.transform = 'scale(1)';
                 }, 300);
                 alert('Translation history would appear here');
+            });
+
+            // Back to Home button
+            backHomeBtn.addEventListener('click', function() {
+                console.log('Navigating back to home...');
             });
             
             // Helper function to simulate translation
