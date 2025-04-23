@@ -355,14 +355,7 @@
         <div class="converter-container">
             <div class="text-box" id="source-box">
                 <div class="text-box-header">
-                    <select class="language-selector" id="source-language">
-                        <option value="English">English</option>
-                        <option value="Spanish">Spanish</option>
-                        <option vale="French">Fruench</option>
-                        <option value="German">German</option>
-                        <option value="Japanese">Japanese</option>
-                    </select>
-                    
+                    <input type="text" class="language-selector" id="source-language" placeholder="Enter source language (e.g., English)" />
                 </div>
                 <textarea class="text-area" id="source-text" placeholder="Enter text to translate..."></textarea>
                 <button class="btn btn-primary" id="translate-btn">
@@ -385,13 +378,7 @@
             
             <div class="text-box" id="target-box">
                 <div class="text-box-header">
-                    <select class="language-selector" id="target-language">
-                        <option value="Spanish">Spanish</option>
-                        <option value="English">English</option>
-                        <option value="French">French</option>
-                        <option value="German">German</option>
-                        <option value="Japanese">Japanese</option>
-                    </select>
+                    <input type="text" class="language-selector" id="target-language" placeholder="Enter target language (e.g., Spanish)" />
                     <div class="action-buttons">
                         <button class="btn" id="copy-btn">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -399,7 +386,6 @@
                             </svg>
                             Copy
                         </button>
-                
                     </div>
                 </div>
                 <textarea class="text-area" id="target-text" placeholder="Translation will appear here..." readonly></textarea>
