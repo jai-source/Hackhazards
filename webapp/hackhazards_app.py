@@ -21,9 +21,13 @@ def index():
 def textify():
     return render_template("textify.html")
 
-@app.route("/audioMac")
-def audioMac():
-    return render_template("audioMac_real.html")
+@app.route("/audiomac_real")
+def audiomac_real():
+    return render_template("audiomac_real.html")
+
+@app.route("/audiomac")
+def audiomac():
+    return render_template("audiomac.html")
 
 @app.route("/translate", methods=["POST"])
 def translate():
